@@ -1,14 +1,19 @@
 package org.example.hn;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-
+@Repository
 public class UserService {
-    public static User getUserInfo(int id) {
+    @Autowired
+    private PostgresDriverManager postgresDriverManager;
+    public User getUserInfo(int id) {
         try {
-            Connection connection = PostgresDriverManager.getInstance().getConnection();
+            Connection connection = postgresDriverManager.getConnection();
             PreparedStatement statement = connection.prepareStatement("SELECT * FROM users WHERE id = ?");
             statement.setInt(1, id);
             ResultSet resultSet = statement.executeQuery();
@@ -19,36 +24,52 @@ public class UserService {
                 user.setAge(resultSet.getInt("age"));
                 user.setLogin(resultSet.getString("login"));
                 return user;
+            } else {
+                return null;
             }
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
         return null;
     }
-    public static boolean changeUserLogin(User user) throws SQLException {
-        Connection connection = PostgresDriverManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement("update users set login=? where id=?;");
-        statement.setInt(2, user.getId());
-        statement.setString(1, user.getLogin());
-        return statement.executeUpdate() > 0;
-    }
-    public static boolean createUser(User user) throws SQLException {
-        Connection connection = PostgresDriverManager.getInstance().getConnection();
-        PreparedStatement statement = connection.prepareStatement("insert into users (id, name, age, login) values (?, ?, ?, ?);");
-        statement.setInt(1, user.getId());
-        statement.setString(2, user.getName());
-        statement.setInt(3, user.getAge());
-        statement.setString(4, user.getLogin());
-        return statement.executeUpdate() > 0;
-    }
-    public static boolean deleteUser(int id) {
+
+    public boolean changeUserLogin(User user) {
         try {
-            Connection connection = PostgresDriverManager.getInstance().getConnection();
+            Connection connection = postgresDriverManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement("update users set login=? where id=?;");
+            statement.setInt(2, user.getId());
+            statement.setString(1, user.getLogin());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean createUser(User user) {
+        try {
+            Connection connection = postgresDriverManager.getConnection();
+            PreparedStatement statement = connection.prepareStatement("insert into users (id, name, age, login) values (?, ?, ?, ?);");
+            statement.setInt(1, user.getId());
+            statement.setString(2, user.getName());
+            statement.setInt(3, user.getAge());
+            statement.setString(4, user.getLogin());
+            return statement.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean deleteUser(int id) {
+        try {
+            Connection connection = postgresDriverManager.getConnection();
             PreparedStatement statement = connection.prepareStatement("delete from users where id = ?;");
             statement.setInt(1, id);
             return statement.executeUpdate() > 0;
         } catch (SQLException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
+        return false;
     }
 }

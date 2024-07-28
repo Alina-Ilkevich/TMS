@@ -9,35 +9,14 @@ import java.sql.SQLException;
 
 @Component
 public class PostgresDriverManager {
-    private static PostgresDriverManager instance;
     @Value("${spring.datasource.url}")
-    private static String URL;
+    private String URL;
     @Value("${spring.datasource.username}")
-    private static String USERNAME;
+    private String USERNAME;
     @Value("${spring.datasource.password}")
-    private static String PASSWORD;
-
-    private PostgresDriverManager() {
-        init();
-    }
-
-    private void init() {
-        try {
-            Class.forName("org.postgresql.Driver").getDeclaredConstructor().newInstance();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    public static PostgresDriverManager getInstance() {
-        if (instance == null) {
-            instance = new PostgresDriverManager();
-        }
-        return instance;
-    }
+    private String PASSWORD;
 
     public Connection getConnection() throws SQLException {
-        Connection connection = DriverManager.getConnection(URL, USERNAME, PASSWORD);
-        return connection;
+        return DriverManager.getConnection(URL, USERNAME, PASSWORD);
     }
 }
