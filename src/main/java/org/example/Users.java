@@ -9,15 +9,15 @@ import jakarta.persistence.Table;
 @Table(name = "users")
 public class Users {
 
+    @Id
+    @Column(name = "id")
+    private int id;
+
     @Column(name = "name")
     private String name;
 
     @Column(name = "age")
     private int age;
-
-    @Id
-    @Column(name = "id")
-    private int id;
 
     @Column(name = "login")
     private String login;

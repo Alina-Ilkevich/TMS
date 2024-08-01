@@ -14,10 +14,7 @@ public class UserService {
     public Users getUserInfo(int id) {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
-        Transaction t = session.beginTransaction();
-        Users user = session.getReference(Users.class, id);
-        session.persist(user);
-        t.commit();
+        Users user = session.get(Users.class, id);
         return user;
     }
 
@@ -25,7 +22,7 @@ public class UserService {
         SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
         Session session = sessionFactory.openSession();
         Transaction t = session.beginTransaction();
-        session.save(user);
+        session.persist(user);
         t.commit();
         session.close();
     }

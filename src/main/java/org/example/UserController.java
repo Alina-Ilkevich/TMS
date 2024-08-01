@@ -19,7 +19,7 @@ public class UserController {
             model.addAttribute("user", user);
         } else {
             model.addAttribute("message", false);
-            model.addAttribute("message", "The user with ID " + id + " not found");
+            model.addAttribute("failed_message", "The user with ID " + id + " not found");
         }
         return "user";
     }

@@ -14,7 +14,7 @@
 
     </c:if>
     <c:if test="${!message}">
-        <h2>${message}</h2>
+        <h2>${failed_message}</h2>
 
     </c:if>
 
