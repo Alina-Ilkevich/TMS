@@ -13,6 +13,7 @@ import java.sql.SQLException;
 public class UserController {
     @Autowired
     private UserService userService;
+
     @GetMapping("/get")
     public String getUserInfo(@RequestParam int id, Model model) {
         User user = userService.getUserInfo(id);
@@ -21,7 +22,7 @@ public class UserController {
             model.addAttribute("user", user);
         } else {
             model.addAttribute("message", false);
-            model.addAttribute("message", "The user with ID " + id + " not found");
+            model.addAttribute("user", "The user with ID " + id + " not found");
         }
         return "user";
     }
